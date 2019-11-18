@@ -12,8 +12,8 @@
     "require": {
         "php": "^7.1",
         "illuminate/console": "^5.5|^6",
-        "illuminate/contracts": "^5.5|^6",
         "illuminate/database": "^5.5|^6",
+        "illuminate/http": "^5.5|^6",
         "illuminate/routing": "^5.5|^6",
         "illuminate/support": "^5.5|^6"
     },
@@ -25,7 +25,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Zaxxo\\LaravelBruteforce\\ServiceProvider"
+                "Zaxxo\\LaravelBruteforce\\BruteforceServiceProvider"
             ]
         }
     }

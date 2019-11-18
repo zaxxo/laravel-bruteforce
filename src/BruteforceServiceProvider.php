@@ -4,7 +4,7 @@ namespace Zaxxo\LaravelBruteforce;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * Service provider for bruteforce protection package.
@@ -12,7 +12,7 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
  * @package Zaxxo\LaravelBruteforce
  * @internal
  */
-class ServiceProvider extends BaseServiceProvider
+class BruteforceServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
@@ -35,9 +35,9 @@ class ServiceProvider extends BaseServiceProvider
     {
         $router = $this->app->get(Router::class);
 
-        $router->middlewarePriority[] = Middleware::class;
+        $router->middlewarePriority[] = BruteforceMiddleware::class;
 
-        $router->aliasMiddleware('bruteforce', Middleware::class);
+        $router->aliasMiddleware('bruteforce', BruteforceMiddleware::class);
     }
 
     /**

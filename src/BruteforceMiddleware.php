@@ -4,8 +4,9 @@ namespace Zaxxo\LaravelBruteforce;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Carbon;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Middleware for bruteforce handling.
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @package Zaxxo\LaravelBruteforce
  * @internal
  */
-class Middleware
+class BruteforceMiddleware
 {
     /**
      * Throttle request on bruteforce attempt.
@@ -23,7 +24,7 @@ class Middleware
      * @param string  $ident
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, string $ident = ''): Response
+    public function handle(Request $request, Closure $next, string $ident = '')
     {
         $ident = $this->getIdent($request, $ident);
 
@@ -33,13 +34,15 @@ class Middleware
 
         $response = $next($request);
 
-        if ($response instanceof InternalResponse) {
-            if ($ident) {
-                $this->attempt($ident);
-                $this->throttle($ident);
-            }
+        if ($response instanceof Response) {
+            if ($response->exception instanceof ThrottledException) {
+                if ($ident) {
+                    $this->attempt($ident);
+                    $this->throttle($ident);
+                }
 
-            $response = $response->getResponse();
+                $response = Router::toResponse($request, $response->exception->getResponse());
+            }
         }
 
         return $response;
